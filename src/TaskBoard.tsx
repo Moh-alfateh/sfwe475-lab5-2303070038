@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import type { Task } from "./schemas";
 import { simulateFetchTasks } from "./mockApi";
 import TaskList from "./TaskList";
+import type { CreateTaskInput, Task } from "./schemas";
+import NewTaskForm from "./NewTaskForm";
 
 type Status = "loading" | "success" | "empty" | "error";
 
@@ -43,6 +44,20 @@ function TaskBoard() {
     setStatus("loading");
     setReloadKey((key) => key + 1);
   }
+    function handleAddTask(input: CreateTaskInput) {
+    setTasks((current) => {
+      const nextId = current.reduce((max, task) => Math.max(max, task.id), 0) + 1;
+      const newTask: Task = {
+        id: nextId,
+        title: input.title,
+        done: input.status === "done",
+        status: input.status,
+        dueDate: input.dueDate,
+      };
+      return [...current, newTask];
+    });
+    setStatus("success");
+  }
 
   return (
     <section>
@@ -60,6 +75,9 @@ function TaskBoard() {
         {status === "empty" && <p>No tasks yet. Add your first one below.</p>}
       </div>
       {status === "success" && <TaskList tasks={tasks} />}
+            {(status === "empty" || status === "success") && (
+        <NewTaskForm onAddTask={handleAddTask} />
+      )}
     </section>
   );
 }
