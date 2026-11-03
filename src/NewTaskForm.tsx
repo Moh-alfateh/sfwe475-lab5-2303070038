@@ -36,35 +36,49 @@ function NewTaskForm({ onAddTask }: Props) {
   return (
     <form onSubmit={handleSubmit}>
       <div>
+        <label htmlFor="title">Task title (required)</label>
         <input
+          id="title"
           name="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          aria-invalid={!!errors.title}
+          aria-describedby={errors.title ? "title-error" : undefined}
         />
-        {errors.title && <p>{errors.title[0]}</p>}
+        {errors.title && <p id="title-error">{errors.title[0]}</p>}
       </div>
       <div>
+        <label htmlFor="dueDate">Due date (optional)</label>
         <input
+          id="dueDate"
           name="dueDate"
           type="date"
           value={dueDate}
           onChange={(e) => setDueDate(e.target.value)}
+          aria-invalid={!!errors.dueDate}
+          aria-describedby={errors.dueDate ? "dueDate-error" : undefined}
         />
-        {errors.dueDate && <p>{errors.dueDate[0]}</p>}
+        {errors.dueDate && <p id="dueDate-error">{errors.dueDate[0]}</p>}
       </div>
       <div>
+        <label htmlFor="status">Status</label>
         <select
+          id="status"
           name="status"
           value={status}
           onChange={(e) => setStatus(e.target.value)}
+          aria-invalid={!!errors.status}
+          aria-describedby={errors.status ? "status-error" : undefined}
         >
           <option value="open">open</option>
           <option value="doing">doing</option>
           <option value="done">done</option>
         </select>
-        {errors.status && <p>{errors.status[0]}</p>}
+        {errors.status && <p id="status-error">{errors.status[0]}</p>}
       </div>
-      <button type="submit">Add task</button>
+      <button type="submit" disabled={title.trim() === ""}>
+        Add task
+      </button>
     </form>
   );
 }
